@@ -12,14 +12,15 @@
 void assign_questions_triple_approach(
     std::vector<int> &questions,
     std::map<std::string, std::set<int>> &q_assignments_map,
-    const std::vector<std::string> &names)
-{
+    const std::vector<std::string> &names,
+    int &global_counter
+) {
     int num_questions = std::size(questions);
     int num_names = std::size(names);
 
-    for (int i = 0; !questions.empty(); i++) {
+    for (; !questions.empty(); global_counter = (++global_counter % num_names)) {
         int question = questions.back();
-        const std::string & name = names[i % num_names];
+        const std::string & name = names[global_counter];
         q_assignments_map[name].insert(question);
         questions.pop_back();
     }
@@ -122,8 +123,10 @@ int main(int argc, char** arg_v)
         q_assignments_map[name] = std::set<int>();
     }
 
+
+    int global_counter = 0;
     for (int i = 0; i < questions.size(); i++) {
-        assign_questions_triple_approach(questions[i], q_assignments_map, names);
+        assign_questions_triple_approach(questions[i], q_assignments_map, names, global_counter);
     }
 
 
